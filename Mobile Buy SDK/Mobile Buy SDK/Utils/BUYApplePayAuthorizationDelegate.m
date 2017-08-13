@@ -206,6 +206,11 @@ typedef void (^BUYShippingMethodCompletion)(PKPaymentAuthorizationStatus, NSArra
 	self.checkout.shippingAddress = [self buyAddressWithContact:contact];
 	if ([self.checkout.shippingAddress isValidAddressForShippingRates]) {
 		[self updateCheckoutWithAddressCompletion:completion];
+	} else {
+		if ([self.checkout.shippingAddress isPartialAddress] == YES) {
+			self.checkout.partialAddresses = @YES;
+		}
+		completion(PKPaymentAuthorizationStatusInvalidShippingPostalAddress, @[], [self.checkout buy_summaryItemsWithShopName:self.shopName]);
 	}
 }
 
